@@ -69,7 +69,12 @@ class RNAdapter implements KeycloakAdapter {
   }
 
   async logout(options?: KeycloakLogoutOptions): Promise<void> {
-    const logoutUrl = this.client.createLogoutUrl(options);
+    this.client.createLogoutUrl(options);
+    const logoutUrl =
+      this.client
+        .createLogoutUrl(options)
+        .replace('redirect_uri', 'post_logout_redirect_uri') +
+      `&id_token_hint=${this.client.idToken}`;
 
     if (await InAppBrowser.isAvailable()) {
       // See for more details https://github.com/proyecto26/react-native-inappbrowser#authentication-flow-using-deep-linking
